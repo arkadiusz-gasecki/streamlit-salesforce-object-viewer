@@ -81,7 +81,7 @@ if submit_connect:
 
 	login_response = requests.post(request_url, data=body)
 	if login_response.status_code != 200:
-		st.write("Error "+login_response.status_code)
+		st.write("Error "+str(login_response.status_code))
 		st.write(json.loads(login_response.text))
 	else:
 		st.write("Login successful")
