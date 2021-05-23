@@ -7,7 +7,7 @@ import requests, json
 import SessionState
 
 # define session variables
-session_state = SessionState.get(token=None, url=None, objects=None)
+session_state = SessionState.get(src_token=None, src_url=None, src_objects=None, tgt_token=None, tgt_url=None, tgt_objects=None)
 
 # define default style
 st.markdown(
@@ -30,16 +30,21 @@ st.markdown(
 ######################### functions ###################################
 
 ########### logout ##############
-def logout():
+def logout(org='src'):
 
-	if session_state.token is not None:
+	token = session_state.src_token if org == 'src' else session_state.tgt_token
+
+	if token is not None:
 					
 		# prepare logout statement
 		request_url = session_state.url+'services/oauth2/revoke'
 		body = {
-    		'token': session_state.token
+    		'token': token
 		}
-		session_state.token = None
+		if org == 'src':
+			session_state.src_token = None
+		else:
+			session_state.tgt_token = None 
 
 		# make logout request
 		logout_response = requests.post(request_url, data=body)
@@ -48,11 +53,10 @@ def logout():
 			st.sidebar.write(json.loads(logout_response.text))
 		else:
 			st.sidebar.write("Logout successful")
-			session_state.token = None
 
 
 ########### login ##############
-def login(url, consumer_key, consumer_secret, username, password):
+def login(url, consumer_key, consumer_secret, username, password, org='src'):
 	# prepare login statement
 	request_url = url+'services/oauth2/token'
 	body = {
@@ -70,8 +74,13 @@ def login(url, consumer_key, consumer_secret, username, password):
 	else:
 		st.write("Login successful")
 		response = json.loads(login_response.text)
-		session_state.token = response['access_token']
-		session_state.url = url
+		if org == 'src':
+			session_state.src_token = response['access_token']
+			session_state.src_url = url
+		elif org == 'tgt':
+			session_state.tgt_token = response['access_token']
+			session_state.tgt_url = url
+		
 
 
 ########### load objects ##############
@@ -172,26 +181,57 @@ def show_object(object_name):
 
 ######################### main site ###################################
 
-form = st.form(key='conn_form')
-url = form.text_input('url')
-username = form.text_input('username')
-password = form.text_input('password', type="password")
-consumer_key = form.text_input('consumer key', type="password")
-consumer_secret = form.text_input('consumer secret', type="password")
-submit_connect = form.form_submit_button(label='Login')
+# add code that allow to autocomplete values read from config.ini file
+cached_src_url = ''
+cached_src_user = ''
+cached_src_password = ''
+cached_src_key = ''
+cached_src_secret = ''
 
+cached_tgt_url = ''
+cached_tgt_user = ''
+cached_tgt_password = ''
+cached_tgt_key = ''
+cached_tgt_secret = ''
 
-if submit_connect:
-	login(url, consumer_key, consumer_secret, username, password)
+if st.button('Autocomplete',key='autocomplete'):
+	user = 'username'
+
+src_col, tgt_col = st.beta_columns(2)
+
+with src_col:
+	src_form = st.form(key='conn_form_10')
+	src_url = src_form.text_input('url', cached_src_url, key=11)
+	src_username = src_form.text_input('username', cached_src_user, key=12)
+	src_password = src_form.text_input('password', cached_src_password, type="password", key=13)
+	src_consumer_key = src_form.text_input('consumer key', cached_src_key, type="password", key=14)
+	src_consumer_secret = src_form.text_input('consumer secret', cached_src_secret, type="password", key=15)
+	src_submit_connect = src_form.form_submit_button(label='Login')
+
+	if st.button('Load source objects',key='load_src_obj'):
+		load_objects()
+
+with tgt_col:
+	tgt_form = st.form(key='conn_form_20')
+	tgt_url = tgt_form.text_input('url', cached_tgt_url, key=21)
+	tgt_username = tgt_form.text_input('username', cached_tgt_user, key=22)
+	tgt_password = tgt_form.text_input('password', cached_tgt_password, type="password", key=23)
+	tgt_consumer_key = tgt_form.text_input('consumer key', cached_tgt_key, type="password", key=24)
+	tgt_consumer_secret = tgt_form.text_input('consumer secret', cached_tgt_secret, type="password", key=25)
+	tgt_submit_connect = tgt_form.form_submit_button(label='Login')
 	
+	if st.button('Load target objects',key='load_tgt_obj'):
+		load_objects()
 
-if st.button('Load objects',key='load_obj'):
-	load_objects()
+if src_submit_connect:
+	login(src_url, src_consumer_key, src_consumer_secret, src_username, src_password, org='src')
+
+
 
 
 ######################### sidebar ###################################
 
-if session_state.token is None:
+if session_state.src_token is None:
 	object_selection = st.sidebar.empty()
 else:
 	object_selection = st.sidebar.selectbox('Select object', ('') if session_state.objects is None else list(session_state.objects.values()))
@@ -209,7 +249,7 @@ if st.sidebar.button('Show object') and session_state.token is not None:
 
 
 if st.sidebar.button('Logout', key='logout'):
-	logout()	
+	logout(org='src')	
 
 
 
