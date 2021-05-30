@@ -203,20 +203,25 @@ def get_table_download_link_csv(df,filename):
 ######################### main site ###################################
 
 # add code that allow to autocomplete values read from config.ini file
+col1, col2, col3 = st.beta_columns(3)
+with col1:
+	pwd = st.text_input("Autocmplete password", type="password", key=50)
+	auto = st.button('Autocomplete',key='autocomplete')
+	
 
-if st.button('Autocomplete',key='autocomplete') or session_state.autocomplete:
+if (auto == True and pwd == st.secrets["auto_complete"]) or session_state.autocomplete:
 
 	cached_src_url      = st.secrets["SOURCE_CONNECTION"]["url"]
 	cached_src_key      = st.secrets["SOURCE_CONNECTION"]["client_id"]
 	cached_src_secret   = st.secrets["SOURCE_CONNECTION"]["client_secret"]
-	cached_src_user     = st.secrets["SOURCE_CONNECTION"]["username"]
-	cached_src_password = st.secrets["SOURCE_CONNECTION"]["password"] + st.secrets["SOURCE_CONNECTION"]["token"]
+	cached_src_user     = '' #st.secrets["SOURCE_CONNECTION"]["username"]
+	cached_src_password = '' #st.secrets["SOURCE_CONNECTION"]["password"] + st.secrets["SOURCE_CONNECTION"]["token"]
 
 	cached_tgt_url      = st.secrets["TARGET_CONNECTION"]["url"]
 	cached_tgt_key      = st.secrets["TARGET_CONNECTION"]["client_id"]
 	cached_tgt_secret   = st.secrets["TARGET_CONNECTION"]["client_secret"]
-	cached_tgt_user     = st.secrets["TARGET_CONNECTION"]["username"]
-	cached_tgt_password = st.secrets["TARGET_CONNECTION"]["password"] + st.secrets["TARGET_CONNECTION"]["token"]
+	cached_tgt_user     = '' #st.secrets["TARGET_CONNECTION"]["username"]
+	cached_tgt_password = '' #st.secrets["TARGET_CONNECTION"]["password"] + st.secrets["TARGET_CONNECTION"]["token"]
 
 	session_state.autocomplete = True
 
