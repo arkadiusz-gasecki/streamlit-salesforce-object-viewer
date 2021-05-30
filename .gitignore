@@ -8,6 +8,7 @@ __pycache__/
 
 # ini file
 config.ini
+.streamlit
 
 # Distribution / packaging
 .Python

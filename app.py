@@ -137,7 +137,6 @@ def prepare_html_table(d, length, params):
 	html += '<div class="container" style="max-width: 100%"><div class="table-responsive" style="max-height: 500px"><table class="table table-bordered">'
 	for k in d:
 		html += ("<th>"+str(k)+"</th>")
-	
 	for i in range(0,length):
 		html += '<tr>'
 		for p in params:
@@ -206,36 +205,19 @@ def get_table_download_link_csv(df,filename):
 # add code that allow to autocomplete values read from config.ini file
 
 if st.button('Autocomplete',key='autocomplete') or session_state.autocomplete:
-	config = configparser.ConfigParser()
-	config.read('config.ini')
 
-	for key, value in config['SOURCE CONNECTION'].items():
-		if key == 'url':
-			cached_src_url = value
-		elif key == 'client_id':
-			cached_src_key = value
-		elif key == 'client_secret':
-			cached_src_secret = value
-		elif key == 'username':
-			cached_src_user = value
-		elif key == 'password':
-			cached_src_password = value
-		elif key == 'token':
-			cached_src_password += value
+	cached_src_url      = st.secrets["SOURCE_CONNECTION"]["url"]
+	cached_src_key      = st.secrets["SOURCE_CONNECTION"]["client_id"]
+	cached_src_secret   = st.secrets["SOURCE_CONNECTION"]["client_secret"]
+	cached_src_user     = st.secrets["SOURCE_CONNECTION"]["username"]
+	cached_src_password = st.secrets["SOURCE_CONNECTION"]["password"] + st.secrets["SOURCE_CONNECTION"]["token"]
 
-	for key, value in config['TARGET CONNECTION'].items():
-		if key == 'url':
-			cached_tgt_url = value
-		elif key == 'client_id':
-			cached_tgt_key = value
-		elif key == 'client_secret':
-			cached_tgt_secret = value
-		elif key == 'username':
-			cached_tgt_user = value
-		elif key == 'password':
-			cached_tgt_password = value
-		elif key == 'token':
-			cached_tgt_password += value
+	cached_tgt_url      = st.secrets["TARGET_CONNECTION"]["url"]
+	cached_tgt_key      = st.secrets["TARGET_CONNECTION"]["client_id"]
+	cached_tgt_secret   = st.secrets["TARGET_CONNECTION"]["client_secret"]
+	cached_tgt_user     = st.secrets["TARGET_CONNECTION"]["username"]
+	cached_tgt_password = st.secrets["TARGET_CONNECTION"]["password"] + st.secrets["TARGET_CONNECTION"]["token"]
+
 	session_state.autocomplete = True
 
 if session_state.autocomplete is None:
