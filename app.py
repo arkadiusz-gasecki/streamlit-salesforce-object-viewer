@@ -205,7 +205,7 @@ def get_table_download_link_csv(df,filename):
 # add code that allow to autocomplete values read from config.ini file
 col1, col2, col3 = st.beta_columns(3)
 with col1:
-	pwd = st.text_input("Autocmplete password", type="password", key=50)
+	pwd = st.text_input("Autocomplete password", type="password", key=50)
 	auto = st.button('Autocomplete',key='autocomplete')
 	
 
