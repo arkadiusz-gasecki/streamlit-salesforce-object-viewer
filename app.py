@@ -126,7 +126,7 @@ def parse_response(response, params,key='fields'):
 			if p != 'picklistValues':				
 				d[p].append(r[p])
 			else:
-				d[p].append( ';'.join([ '"{}"'.format(e['value']) for e in r[p] ]) )
+				d[p].append( ','.join([ '"{}"'.format(e['value']) for e in r[p] ]) )
 	return (d, additional_columns)
 
 def prepare_html_table(d, length, params):
@@ -142,7 +142,7 @@ def prepare_html_table(d, length, params):
 		for p in params:
 			if p.startswith('picklistValues'):
 				if isinstance(d[p][i],str) and len(d[p][i]) > 0:
-					elem = '<select style="width: 200px">'+"".join(['<option>'+e.replace('"','')+'</option>' for e in d[p][i].split(';')])+'</select>'
+					elem = '<select style="width: 200px">'+"".join(['<option>'+e.replace('"','')+'</option>' for e in d[p][i].split(',')])+'</select>'
 				else:
 					elem = ''
 				html += ('<td>'+elem+'</td>')
@@ -266,14 +266,20 @@ with tgt_col:
 
 if src_submit_connect:
 	if pwd == st.secrets["auto_complete"]:
-		src_username = st.secrets["SOURCE_CONNECTION"]["username"]
-		src_password = st.secrets["SOURCE_CONNECTION"]["password"] + st.secrets["SOURCE_CONNECTION"]["token"]
+		tmp_src_username = st.secrets["SOURCE_CONNECTION"]["username"] if (src_username is None or src_username == '') else src_username
+		tmp_src_password = st.secrets["SOURCE_CONNECTION"]["password"] + st.secrets["SOURCE_CONNECTION"]["token"] if (src_password is None or src_password == '') else src_password
+		
+		src_password = tmp_src_password
+		src_username = tmp_src_username
 	login(src_url, src_consumer_key, src_consumer_secret, src_username, src_password, org='src')
 
 if tgt_submit_connect:
 	if pwd == st.secrets["auto_complete"]:
-		tgt_username = st.secrets["TARGET_CONNECTION"]["username"]
-		tgt_password = st.secrets["TARGET_CONNECTION"]["password"] + st.secrets["TARGET_CONNECTION"]["token"]
+		tmp_tgt_username = st.secrets["TARGET_CONNECTION"]["username"] if (tgt_username is None or tgt_username == '') else tgt_username
+		tmp_tgt_password = st.secrets["TARGET_CONNECTION"]["password"] + st.secrets["TARGET_CONNECTION"]["token"] if (tgt_password is None or tgt_password == '') else tgt_password
+		
+		tgt_password = tmp_tgt_password
+		tgt_username = tmp_tgt_username
 	login(tgt_url, tgt_consumer_key, tgt_consumer_secret, tgt_username, tgt_password, org='tgt')
 
 
