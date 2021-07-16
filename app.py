@@ -205,7 +205,7 @@ def get_table_download_link_csv(df,filename):
 # add code that allow to autocomplete values read from config.ini file
 col1, col2, col3 = st.beta_columns(3)
 with col1:
-	pwd = st.text_input("Autocomplete password", type="password", key=50)
+	pwd = st.text_input("Autocomplete password", type="password", key='50')
 	auto = st.button('Autocomplete',key='autocomplete')
 	
 
@@ -242,11 +242,11 @@ src_col, tgt_col = st.beta_columns(2)
 
 with src_col:
 	src_form = st.form(key='conn_form_10')
-	src_url = src_form.text_input('url', cached_src_url, key=11)
-	src_username = src_form.text_input('username', cached_src_user, key=12)
-	src_password = src_form.text_input('password', cached_src_password, type="password", key=13)
-	src_consumer_key = src_form.text_input('consumer key', cached_src_key, type="password", key=14)
-	src_consumer_secret = src_form.text_input('consumer secret', cached_src_secret, type="password", key=15)
+	src_url = src_form.text_input('url', cached_src_url, key='11')
+	src_username = src_form.text_input('username', cached_src_user, key='12')
+	src_password = src_form.text_input('password', cached_src_password, type="password", key='13')
+	src_consumer_key = src_form.text_input('consumer key', cached_src_key, type="password", key='14')
+	src_consumer_secret = src_form.text_input('consumer secret', cached_src_secret, type="password", key='15')
 	src_submit_connect = src_form.form_submit_button(label='Login')
 
 	if st.button('Load source objects',key='load_src_obj'):
@@ -254,11 +254,11 @@ with src_col:
 
 with tgt_col:
 	tgt_form = st.form(key='conn_form_20')
-	tgt_url = tgt_form.text_input('url', cached_tgt_url, key=21)
-	tgt_username = tgt_form.text_input('username', cached_tgt_user, key=22)
-	tgt_password = tgt_form.text_input('password', cached_tgt_password, type="password", key=23)
-	tgt_consumer_key = tgt_form.text_input('consumer key', cached_tgt_key, type="password", key=24)
-	tgt_consumer_secret = tgt_form.text_input('consumer secret', cached_tgt_secret, type="password", key=25)
+	tgt_url = tgt_form.text_input('url', cached_tgt_url, key='21')
+	tgt_username = tgt_form.text_input('username', cached_tgt_user, key='22')
+	tgt_password = tgt_form.text_input('password', cached_tgt_password, type="password", key='23')
+	tgt_consumer_key = tgt_form.text_input('consumer key', cached_tgt_key, type="password", key='24')
+	tgt_consumer_secret = tgt_form.text_input('consumer secret', cached_tgt_secret, type="password", key='25')
 	tgt_submit_connect = tgt_form.form_submit_button(label='Login')
 	
 	if st.button('Load target objects',key='load_tgt_obj'):
